@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import CreditCard from './CreditCard';
-import LogoutModal from './LogoutModal';
+import CustomerLayout from './CustomerLayout';
 
 interface CardDashboardProps {
   onLogout: () => void;
@@ -8,41 +8,14 @@ interface CardDashboardProps {
 
 const CardDashboard: React.FC<CardDashboardProps> = ({ onLogout }) => {
   const [isBillSettled, setIsBillSettled] = useState(false);
-  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const handleSettleBill = () => {
     setIsBillSettled(true);
     setTimeout(() => setIsBillSettled(false), 3000);
   };
 
-  const handleLogoutClick = () => {
-    setIsLogoutModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsLogoutModalOpen(false);
-  };
-
-  const handleConfirmLogout = () => {
-    setIsLogoutModalOpen(false);
-    onLogout();
-  };
-
   return (
-    <div className="min-h-screen bg-gray-50 p-8 font-sans">
-      <div className="max-w-6xl mx-auto">
-        <header className="mb-10 flex justify-between items-center">
-            <div>
-                <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight">Dashboard</h1>
-                <p className="text-gray-500 mt-1">Welcome back, Manick Sriram M</p>
-            </div>
-            <div className="bg-white p-2 rounded-full shadow-sm cursor-pointer hover:bg-gray-100 transition-colors" onClick={handleLogoutClick} title="Logout">
-                <div className="w-10 h-10 bg-linear-to-tr from-purple-600 to-blue-500 rounded-full flex items-center justify-center text-white font-bold">
-                    MS
-                </div>
-            </div>
-        </header>
-        
+    <CustomerLayout onLogout={onLogout} title="Dashboard">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column: Card & Quick Actions */}
           <div className="lg:col-span-1 space-y-8">
@@ -134,14 +107,7 @@ const CardDashboard: React.FC<CardDashboardProps> = ({ onLogout }) => {
             </div>
           </div>
         </div>
-      </div>
-
-      <LogoutModal 
-        isOpen={isLogoutModalOpen} 
-        onClose={handleCloseModal} 
-        onConfirm={handleConfirmLogout} 
-      />
-    </div>
+    </CustomerLayout>
   );
 };
 

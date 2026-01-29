@@ -42,7 +42,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
            <div className="absolute w-64 h-64 bg-[#112240] rounded-full -top-12 -left-12 opacity-50"></div>
            <div className="absolute w-32 h-32 bg-[#ffd700] rounded-full bottom-12 right-12 opacity-10"></div>
            <div className="relative z-10 text-center">
-              <h1 className="text-4xl font-bold text-white mb-4">MBanking</h1>
+              <h1 className="text-4xl font-bold text-white mb-4">PMBanking</h1>
               <p className="text-[#8892b0]">Secure. Professional. Reliable.</p>
            </div>
         </div>
