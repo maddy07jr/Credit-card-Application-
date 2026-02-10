@@ -1,6 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminLayout from './AdminLayout';
+import { useSocket } from '../context/SocketContext';
+import type { Transaction, DashboardStats } from '../types';
 
 interface AdminDashboardProps {
   onLogout: () => void;
@@ -8,6 +10,62 @@ interface AdminDashboardProps {
 
 const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
   const navigate = useNavigate();
+  const { socket } = useSocket();
+  const [stats, setStats] = React.useState<DashboardStats>({
+    totalVolume: 0,
+    activeCards: 0,
+    pendingApprovals: 0
+  });
+  const [transactions, setTransactions] = React.useState<Transaction[]>([]);
+
+  const fetchStats = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/api/stats');
+      const data = await response.json();
+      setStats(data);
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+    }
+  };
+
+  const fetchTransactions = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/api/transactions');
+      const data = await response.json();
+      setTransactions(data.slice(0, 5)); // Show only recent 5
+    } catch (error) {
+      console.error('Error fetching transactions:', error);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchStats();
+    fetchTransactions();
+
+    if (socket) {
+      socket.on('stats-updated', (newStats: DashboardStats) => {
+        setStats(newStats);
+      });
+
+      socket.on('new-transaction', (newTx: Transaction) => {
+        setTransactions(prev => [newTx, ...prev].slice(0, 5));
+        fetchStats(); // Refresh stats as they might be calculated server-side
+      });
+      
+      socket.on('transaction-updated', () => {
+        fetchTransactions();
+        fetchStats();
+      })
+    }
+
+    return () => {
+      if (socket) {
+        socket.off('stats-updated');
+        socket.off('new-transaction');
+        socket.off('transaction-updated');
+      }
+    };
+  }, [socket]);
 
   return (
     <AdminLayout onLogout={onLogout} title="System Overview">
@@ -18,7 +76,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                 className="bg-gray-800 p-6 rounded-2xl border border-gray-700 cursor-pointer hover:border-blue-500 transition-colors group"
             >
                 <p className="text-gray-400 text-sm mb-1 group-hover:text-blue-400 transition-colors">Total Active Cards</p>
-                <h3 className="text-3xl font-bold text-white">1,245</h3>
+                <h3 className="text-3xl font-bold text-white">{stats.activeCards.toLocaleString()}</h3>
                 <p className="text-green-400 text-sm mt-2 flex items-center">
                     <span className="mr-1">↑</span> 12% from last month
                 </p>
@@ -28,7 +86,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                 className="bg-gray-800 p-6 rounded-2xl border border-gray-700 cursor-pointer hover:border-blue-500 transition-colors group"
             >
                 <p className="text-gray-400 text-sm mb-1 group-hover:text-blue-400 transition-colors">Total Transaction Volume</p>
-                <h3 className="text-3xl font-bold text-white">$4.2M</h3>
+                <h3 className="text-3xl font-bold text-white">${stats.totalVolume.toLocaleString()}</h3>
                 <p className="text-blue-400 text-sm mt-2 flex items-center">
                     <span className="mr-1">↑</span> 8% from last month
                 </p>
@@ -38,7 +96,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                 className="bg-gray-800 p-6 rounded-2xl border border-gray-700 cursor-pointer hover:border-blue-500 transition-colors group"
             >
                 <p className="text-gray-400 text-sm mb-1 group-hover:text-blue-400 transition-colors">Pending Approvals</p>
-                <h3 className="text-3xl font-bold text-white">28</h3>
+                <h3 className="text-3xl font-bold text-white">{stats.pendingApprovals}</h3>
                 <p className="text-yellow-400 text-sm mt-2 flex items-center">
                     Requires attention
                 </p>
@@ -69,46 +127,24 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-700">
-                        <tr className="hover:bg-gray-700/30 transition-colors">
-                            <td className="px-6 py-4 text-sm font-mono text-gray-400">#TRX-9821</td>
-                            <td className="px-6 py-4 font-medium">Manick Sriram M</td>
-                            <td className="px-6 py-4">Apple Store</td>
-                            <td className="px-6 py-4 font-medium text-white">$1,299.00</td>
-                            <td className="px-6 py-4"><span className="bg-green-500/10 text-green-400 px-2 py-1 rounded text-xs font-medium">Completed</span></td>
-                            <td className="px-6 py-4 text-gray-400 text-sm">Oct 24, 2023</td>
-                        </tr>
-                        <tr className="hover:bg-gray-700/30 transition-colors">
-                            <td className="px-6 py-4 text-sm font-mono text-gray-400">#TRX-9820</td>
-                            <td className="px-6 py-4 font-medium">Sarah Johnson</td>
-                            <td className="px-6 py-4">Uber Rides</td>
-                            <td className="px-6 py-4 font-medium text-white">$24.50</td>
-                            <td className="px-6 py-4"><span className="bg-green-500/10 text-green-400 px-2 py-1 rounded text-xs font-medium">Completed</span></td>
-                            <td className="px-6 py-4 text-gray-400 text-sm">Oct 24, 2023</td>
-                        </tr>
-                        <tr className="hover:bg-gray-700/30 transition-colors">
-                            <td className="px-6 py-4 text-sm font-mono text-gray-400">#TRX-9819</td>
-                            <td className="px-6 py-4 font-medium">David Chen</td>
-                            <td className="px-6 py-4">Amazon AWS</td>
-                            <td className="px-6 py-4 font-medium text-white">$450.00</td>
-                            <td className="px-6 py-4"><span className="bg-yellow-500/10 text-yellow-400 px-2 py-1 rounded text-xs font-medium">Pending</span></td>
-                            <td className="px-6 py-4 text-gray-400 text-sm">Oct 23, 2023</td>
-                        </tr>
-                        <tr className="hover:bg-gray-700/30 transition-colors">
-                            <td className="px-6 py-4 text-sm font-mono text-gray-400">#TRX-9818</td>
-                            <td className="px-6 py-4 font-medium">Emily Davis</td>
-                            <td className="px-6 py-4">Starbucks</td>
-                            <td className="px-6 py-4 font-medium text-white">$12.75</td>
-                            <td className="px-6 py-4"><span className="bg-green-500/10 text-green-400 px-2 py-1 rounded text-xs font-medium">Completed</span></td>
-                            <td className="px-6 py-4 text-gray-400 text-sm">Oct 23, 2023</td>
-                        </tr>
-                        <tr className="hover:bg-gray-700/30 transition-colors">
-                            <td className="px-6 py-4 text-sm font-mono text-gray-400">#TRX-9817</td>
-                            <td className="px-6 py-4 font-medium">Michael Wilson</td>
-                            <td className="px-6 py-4">Best Buy</td>
-                            <td className="px-6 py-4 font-medium text-white">$2,499.00</td>
-                            <td className="px-6 py-4"><span className="bg-red-500/10 text-red-400 px-2 py-1 rounded text-xs font-medium">Declined</span></td>
-                            <td className="px-6 py-4 text-gray-400 text-sm">Oct 22, 2023</td>
-                        </tr>
+                        {transactions.map((tx) => (
+                            <tr key={tx.id} className="hover:bg-gray-700/30 transition-colors">
+                                <td className="px-6 py-4 text-sm font-mono text-gray-400">#TRX-{tx.id.slice(-4)}</td>
+                                <td className="px-6 py-4 font-medium">User</td>
+                                <td className="px-6 py-4">{tx.merchant}</td>
+                                <td className="px-6 py-4 font-medium text-white">${Math.abs(tx.amount).toFixed(2)}</td>
+                                <td className="px-6 py-4">
+                                    <span className={`px-2 py-1 rounded text-xs font-medium ${
+                                        tx.status === 'Completed' ? 'bg-green-500/10 text-green-400' :
+                                        tx.status === 'Pending' ? 'bg-yellow-500/10 text-yellow-400' :
+                                        'bg-red-500/10 text-red-400'
+                                    }`}>
+                                        {tx.status}
+                                    </span>
+                                </td>
+                                <td className="px-6 py-4 text-gray-400 text-sm">{tx.date}</td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </div>
@@ -116,5 +152,4 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
     </AdminLayout>
   );
 };
-
 export default AdminDashboard;

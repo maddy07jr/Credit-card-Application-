@@ -1,18 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import CreditCard from './CreditCard';
 import CustomerLayout from './CustomerLayout';
+import { useSocket } from '../context/SocketContext';
+import type { Card } from '../types';
 
 interface CardDashboardProps {
   onLogout: () => void;
 }
 
 const CardDashboard: React.FC<CardDashboardProps> = ({ onLogout }) => {
-  const [isBillSettled, setIsBillSettled] = useState(false);
+  const navigate = useNavigate();
+  const { socket } = useSocket();
+  const [card, setCard] = useState<Card | null>(null);
+
+  const fetchCard = async () => {
+    try {
+        const response = await fetch('http://localhost:3001/api/card');
+        if (response.ok) {
+            const data = await response.json();
+            setCard(data); 
+        }
+    } catch (error) {
+        console.error('Error fetching card:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCard();
+
+    if (socket) {
+        socket.on('card-updated', (updatedCard: Card) => {
+            setCard(updatedCard);
+        });
+    }
+
+    return () => {
+        if (socket) {
+            socket.off('card-updated');
+        }
+    }
+  }, [socket]);
 
   const handleSettleBill = () => {
-    setIsBillSettled(true);
-    setTimeout(() => setIsBillSettled(false), 3000);
+    navigate('/payment');
   };
+
+  const utilization = card ? Math.round((card.balance / card.limit) * 100) : 0;
 
   return (
     <CustomerLayout onLogout={onLogout} title="Dashboard">
@@ -24,20 +58,22 @@ const CardDashboard: React.FC<CardDashboardProps> = ({ onLogout }) => {
                 <div className="transform hover:scale-105 transition-transform duration-300">
                     <CreditCard />
                 </div>
-                <div className="mt-8 w-full space-y-4">
-                    <div className="flex justify-between items-center py-3 border-b border-gray-100">
-                        <span className="text-gray-500">Status</span>
-                        <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">Active</span>
+                {card && (
+                    <div className="mt-8 w-full space-y-4">
+                        <div className="flex justify-between items-center py-3 border-b border-gray-100">
+                            <span className="text-gray-500">Status</span>
+                            <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">{card.status}</span>
+                        </div>
+                        <div className="flex justify-between items-center py-3 border-b border-gray-100">
+                            <span className="text-gray-500">Card Type</span>
+                            <span className="font-semibold text-gray-800">{card.type}</span>
+                        </div>
+                        <div className="flex justify-between items-center py-3">
+                            <span className="text-gray-500">Credit Limit</span>
+                            <span className="font-semibold text-gray-800">${card.limit.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                        </div>
                     </div>
-                    <div className="flex justify-between items-center py-3 border-b border-gray-100">
-                        <span className="text-gray-500">Card Type</span>
-                        <span className="font-semibold text-gray-800">Platinum Rewards</span>
-                    </div>
-                    <div className="flex justify-between items-center py-3">
-                        <span className="text-gray-500">Credit Limit</span>
-                        <span className="font-semibold text-gray-800">$15,000.00</span>
-                    </div>
-                </div>
+                )}
             </div>
           </div>
 
@@ -50,39 +86,31 @@ const CardDashboard: React.FC<CardDashboardProps> = ({ onLogout }) => {
                     <span className="text-sm text-gray-400">Updated just now</span>
                 </div>
                 
-                <div className="flex flex-col md:flex-row gap-8 items-center">
-                    <div className="flex-1 w-full">
-                        <p className="text-gray-500 mb-1">Statement Balance</p>
-                        <p className="text-4xl font-extrabold text-gray-900">$1,245.50</p>
-                    </div>
-                    <div className="flex-1 w-full">
-                        <div className="flex justify-between mb-2">
-                            <span className="text-gray-600 font-medium">Credit Utilization</span>
-                            <span className="text-blue-600 font-bold">45%</span>
+                {card && (
+                    <div className="flex flex-col md:flex-row gap-8 items-center">
+                        <div className="flex-1 w-full">
+                            <p className="text-gray-500 mb-1">Statement Balance</p>
+                            <p className="text-4xl font-extrabold text-gray-900">${card.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
                         </div>
-                        <div className="w-full bg-gray-100 rounded-full h-4 overflow-hidden">
-                            <div className="bg-linear-to-r from-blue-500 to-purple-600 h-4 rounded-full transition-all duration-1000 ease-out" style={{ width: '45%' }}></div>
+                        <div className="flex-1 w-full">
+                            <div className="flex justify-between mb-2">
+                                <span className="text-gray-600 font-medium">Credit Utilization</span>
+                                <span className="text-blue-600 font-bold">{utilization}%</span>
+                            </div>
+                            <div className="w-full bg-gray-100 rounded-full h-4 overflow-hidden">
+                                <div className="bg-linear-to-r from-blue-500 to-purple-600 h-4 rounded-full transition-all duration-1000 ease-out" style={{ width: `${utilization}%` }}></div>
+                            </div>
+                            <p className="text-xs text-gray-400 mt-2 text-right">Used: ${card.balance.toLocaleString()} / Limit: ${card.limit.toLocaleString()}</p>
                         </div>
-                        <p className="text-xs text-gray-400 mt-2 text-right">Used: $450.20 / Limit: $15,000</p>
                     </div>
-                </div>
+                )}
 
                 <div className="mt-8 pt-6 border-t border-gray-100 flex justify-end">
                     <button 
                         onClick={handleSettleBill}
-                        className={`px-8 py-3 rounded-xl font-bold text-white shadow-lg transition-all transform hover:-translate-y-1 focus:ring-4 focus:ring-opacity-50 ${
-                            isBillSettled 
-                            ? 'bg-green-500 focus:ring-green-300 cursor-default' 
-                            : 'bg-gray-900 hover:bg-black focus:ring-gray-500'
-                        }`}
-                        disabled={isBillSettled}
+                        className="px-8 py-3 rounded-xl font-bold text-white shadow-lg transition-all transform hover:-translate-y-1 focus:ring-4 focus:ring-opacity-50 bg-gray-900 hover:bg-black focus:ring-gray-500"
                     >
-                        {isBillSettled ? (
-                            <span className="flex items-center gap-2">
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
-                                Paid Successfully
-                            </span>
-                        ) : 'Settle Bill Now'}
+                        Settle Bill Now
                     </button>
                 </div>
             </div>

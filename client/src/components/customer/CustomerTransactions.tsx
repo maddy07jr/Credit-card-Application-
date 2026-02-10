@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import CustomerLayout from '../CustomerLayout';
+import { useSocket } from '../../context/SocketContext';
+import type { Transaction } from '../../types';
 
 interface CustomerTransactionsProps {
   onLogout: () => void;
@@ -7,20 +9,53 @@ interface CustomerTransactionsProps {
 
 const CustomerTransactions: React.FC<CustomerTransactionsProps> = ({ onLogout }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const { socket } = useSocket();
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
 
-  const transactions = [
-    { id: 1, merchant: 'Apple Store', category: 'Electronics', date: 'Oct 24, 2023', status: 'Completed', amount: -1299.00, icon: '🍎', statusColor: 'bg-green-100 text-green-700' },
-    { id: 2, merchant: 'Uber Rides', category: 'Transport', date: 'Oct 24, 2023', status: 'Completed', amount: -24.50, icon: '🚗', statusColor: 'bg-green-100 text-green-700' },
-    { id: 3, merchant: 'Starbucks', category: 'Dining', date: 'Oct 23, 2023', status: 'Completed', amount: -12.75, icon: '☕', statusColor: 'bg-green-100 text-green-700' },
-    { id: 4, merchant: 'Salary Deposit', category: 'Income', date: 'Oct 15, 2023', status: 'Received', amount: 4500.00, icon: '💼', statusColor: 'bg-blue-100 text-blue-700' },
-    { id: 5, merchant: 'Netflix', category: 'Entertainment', date: 'Oct 14, 2023', status: 'Completed', amount: -15.99, icon: '🎬', statusColor: 'bg-green-100 text-green-700' },
-    { id: 6, merchant: 'Amazon', category: 'Shopping', date: 'Oct 12, 2023', status: 'Pending', amount: -89.50, icon: '📦', statusColor: 'bg-yellow-100 text-yellow-700' },
-  ];
+  const fetchTransactions = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/api/transactions');
+      const data = await response.json();
+      setTransactions(data);
+    } catch (error) {
+      console.error('Error fetching transactions:', error);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchTransactions();
+
+    if (socket) {
+      socket.on('new-transaction', (newTx: Transaction) => {
+        setTransactions(prev => [newTx, ...prev]);
+      });
+      
+      socket.on('transaction-updated', (updatedTx: Transaction) => {
+        setTransactions(prev => prev.map(tx => tx.id === updatedTx.id ? updatedTx : tx));
+      });
+    }
+
+    return () => {
+      if (socket) {
+        socket.off('new-transaction');
+        socket.off('transaction-updated');
+      }
+    };
+  }, [socket]);
 
   const filteredTransactions = transactions.filter(tx => 
     tx.merchant.toLowerCase().includes(searchQuery.toLowerCase()) ||
     tx.category.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+        case 'Completed': return 'bg-green-100 text-green-700';
+        case 'Pending': return 'bg-yellow-100 text-yellow-700';
+        case 'Declined': return 'bg-red-100 text-red-700';
+        default: return 'bg-gray-100 text-gray-700';
+    }
+  };
 
   return (
     <CustomerLayout onLogout={onLogout} title="Transaction History">
@@ -59,7 +94,7 @@ const CustomerTransactions: React.FC<CustomerTransactionsProps> = ({ onLogout })
                                 </td>
                                 <td className="px-8 py-5 text-gray-500">{tx.category}</td>
                                 <td className="px-8 py-5 text-gray-500">{tx.date}</td>
-                                <td className="px-8 py-5"><span className={`${tx.statusColor} px-3 py-1 rounded-full text-xs font-bold`}>{tx.status}</span></td>
+                                <td className="px-8 py-5"><span className={`${getStatusColor(tx.status)} px-3 py-1 rounded-full text-xs font-bold`}>{tx.status}</span></td>
                                 <td className={`px-8 py-5 font-bold text-right ${tx.amount > 0 ? 'text-green-600' : 'text-gray-900'}`}>
                                     {tx.amount > 0 ? '+' : ''}{tx.amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
                                 </td>

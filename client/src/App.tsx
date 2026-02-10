@@ -11,6 +11,8 @@ import TransactionLogs from './components/admin/TransactionLogs';
 import SystemSettings from './components/admin/SystemSettings';
 import PendingApprovals from './components/admin/PendingApprovals';
 import CustomerTransactions from './components/customer/CustomerTransactions';
+import PaymentPage from './components/customer/PaymentPage';
+import ShoppingPage from './components/customer/ShoppingPage';
 import RewardsPage from './components/customer/RewardsPage';
 import CustomerSettings from './components/customer/CustomerSettings';
 
@@ -46,6 +48,8 @@ function App() {
           <Route path="/dashboard" element={token ? <DashboardLanding onLogout={handleLogout} /> : <Navigate to="/login" />} />
           <Route path="/card-details" element={token ? <CardDashboard onLogout={handleLogout} /> : <Navigate to="/login" />} />
           <Route path="/transactions" element={token ? <CustomerTransactions onLogout={handleLogout} /> : <Navigate to="/login" />} />
+          <Route path="/payment" element={token ? <PaymentPage onLogout={handleLogout} /> : <Navigate to="/login" />} />
+          <Route path="/shop" element={token ? <ShoppingPage onLogout={handleLogout} /> : <Navigate to="/login" />} />
           <Route path="/rewards" element={token ? <RewardsPage onLogout={handleLogout} /> : <Navigate to="/login" />} />
           <Route path="/settings" element={token ? <CustomerSettings onLogout={handleLogout} /> : <Navigate to="/login" />} />
 
