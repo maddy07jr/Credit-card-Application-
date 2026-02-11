@@ -19,7 +19,8 @@ const PaymentPage: React.FC<PaymentPageProps> = ({ onLogout }) => {
     // Fetch card details to get balance
     const fetchCard = async () => {
         try {
-            const response = await fetch('http://localhost:3001/api/card');
+            const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+            const response = await fetch(`${apiUrl}/api/card`);
             if (response.ok) {
                 const data = await response.json();
                 setCard(data); 
@@ -55,7 +56,8 @@ const PaymentPage: React.FC<PaymentPageProps> = ({ onLogout }) => {
     setIsProcessing(true);
 
     try {
-        const response = await fetch('http://localhost:3001/api/transactions', {
+        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+        const response = await fetch(`${apiUrl}/api/transactions`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

@@ -18,23 +18,25 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
   });
   const [transactions, setTransactions] = React.useState<Transaction[]>([]);
 
-  const fetchStats = async () => {
+  const fetchTransactions = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/stats');
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      const response = await fetch(`${apiUrl}/api/transactions`);
       const data = await response.json();
-      setStats(data);
+      setTransactions(data.slice(0, 5)); // Just take recent 5
     } catch (error) {
-      console.error('Error fetching stats:', error);
+      console.error('Error fetching transactions:', error);
     }
   };
 
-  const fetchTransactions = async () => {
+  const fetchStats = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/transactions');
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      const response = await fetch(`${apiUrl}/api/dashboard/stats`);
       const data = await response.json();
-      setTransactions(data.slice(0, 5)); // Show only recent 5
+      setStats(data);
     } catch (error) {
-      console.error('Error fetching transactions:', error);
+      console.error('Error fetching dashboard stats:', error);
     }
   };
 

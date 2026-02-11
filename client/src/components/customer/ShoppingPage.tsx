@@ -35,7 +35,8 @@ const ShoppingPage: React.FC<ShoppingPageProps> = ({ onLogout }) => {
     setProcessingId(product.id);
 
     try {
-        const response = await fetch('http://localhost:3001/api/transactions', {
+        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+        const response = await fetch(`${apiUrl}/api/transactions`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

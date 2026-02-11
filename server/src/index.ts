@@ -6,9 +6,13 @@ import { Server } from 'socket.io';
 import { dataStore } from './dataStore';
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
-app.use(cors());
+// Middleware
+app.use(cors({
+    origin: process.env.CLIENT_URL || "*", // Allow configuring client URL
+    methods: ["GET", "POST"]
+}));
 app.use(bodyParser.json());
 
 const httpServer = createServer(app);

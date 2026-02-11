@@ -7,9 +7,18 @@ interface SocketContextType {
   isConnected: boolean;
 }
 
-const SocketContext = createContext<SocketContextType>({ socket: null, isConnected: false });
+const SocketContext = createContext<SocketContextType | undefined>(undefined);
 
-export const useSocket = () => useContext(SocketContext);
+// Use environment variable for production, fallback to localhost for dev
+const SOCKET_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
+export const useSocket = () => {
+  const context = useContext(SocketContext);
+  if (context === undefined) {
+    throw new Error('useSocket must be used within a SocketProvider');
+  }
+  return context;
+};
 
 export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -18,7 +27,8 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   useEffect(() => {
     // Connect to the server
     // In production, you'd use an environment variable for the URL
-    const newSocket = io('http://localhost:3001');
+    const newSocket = io(SOCKET_URL);
+    setSocket(newSocket);
 
     newSocket.on('connect', () => {
       console.log('Connected to socket server');

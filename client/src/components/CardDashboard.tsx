@@ -16,7 +16,8 @@ const CardDashboard: React.FC<CardDashboardProps> = ({ onLogout }) => {
 
   const fetchCard = async () => {
     try {
-        const response = await fetch('http://localhost:3001/api/card');
+        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+        const response = await fetch(`${apiUrl}/api/card`);
         if (response.ok) {
             const data = await response.json();
             setCard(data); 
