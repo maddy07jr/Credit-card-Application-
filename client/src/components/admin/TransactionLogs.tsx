@@ -43,7 +43,7 @@ const TransactionLogs: React.FC<TransactionLogsProps> = ({ onLogout }) => {
                     <tbody className="divide-y divide-gray-700">
                         <tr className="hover:bg-gray-700/30 transition-colors">
                             <td className="px-6 py-4 text-sm font-mono text-gray-400">#TRX-9821</td>
-                            <td className="px-6 py-4 font-medium">Manick Sriram M</td>
+                            <td className="px-6 py-4 font-medium">Priyanka</td>
                             <td className="px-6 py-4">Apple Store</td>
                             <td className="px-6 py-4 font-medium text-white">$1,299.00</td>
                             <td className="px-6 py-4"><span className="bg-green-500/10 text-green-400 px-2 py-1 rounded text-xs font-medium">Completed</span></td>

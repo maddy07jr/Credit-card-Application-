@@ -77,7 +77,7 @@ const CustomerLayout: React.FC<CustomerLayoutProps> = ({ children, onLogout, tit
                 </button>
                 <div>
                     <h2 className="text-3xl font-bold text-gray-900">{title || 'Welcome Back'}</h2>
-                    <p className="text-gray-500 mt-1">Manick Sriram M</p>
+                    <p className="text-gray-500 mt-1">Priyanka</p>
                 </div>
             </div>
             <div className="flex items-center gap-4">

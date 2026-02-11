@@ -41,7 +41,7 @@ class DataStore {
     ];
 
     private users: User[] = [
-        { id: 'user1', name: 'Manick Sriram M', role: 'customer' },
+        { id: 'user1', name: 'Priyanka', role: 'customer' },
         { id: 'admin1', name: 'Admin User', role: 'admin' }
     ];
 
@@ -56,7 +56,7 @@ class DataStore {
             status: 'Active',
             expiry: '12/28',
             cvv: '123',
-            nameOnCard: 'Manick Sriram M'
+            nameOnCard: 'Priyanka'
         }
     ];
 

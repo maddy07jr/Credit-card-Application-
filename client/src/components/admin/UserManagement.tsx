@@ -7,7 +7,7 @@ interface UserManagementProps {
 
 const UserManagement: React.FC<UserManagementProps> = ({ onLogout }) => {
   const users = [
-    { id: 1, name: 'Manick Sriram M', email: 'manick@example.com', status: 'Active', joined: 'Oct 2023' },
+    { id: 1, name: 'Priyanka', email: 'Priyanka@example.com', status: 'Active', joined: 'Oct 2023' },
     { id: 2, name: 'Sarah Johnson', email: 'sarah@example.com', status: 'Active', joined: 'Sep 2023' },
     { id: 3, name: 'David Chen', email: 'david@example.com', status: 'Blocked', joined: 'Aug 2023' },
     { id: 4, name: 'Emily Davis', email: 'emily@example.com', status: 'Active', joined: 'Nov 2023' },

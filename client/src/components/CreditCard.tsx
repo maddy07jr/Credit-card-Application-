@@ -13,7 +13,7 @@ const CreditCard: React.FC = () => {
         <div className="flex justify-between">
         <div className="">
             <p className="font-light">Name</p>
-            <p className="font-medium tracking-widest">MANICK SRIRAM M</p>
+            <p className="font-medium tracking-widest">PRIYANKA</p>
         </div>
         <img className="w-14 h-14" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" alt="Mastercard" />
         </div>

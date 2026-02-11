@@ -15,11 +15,11 @@ const CustomerSettings: React.FC<CustomerSettingsProps> = ({ onLogout }) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label className="block text-gray-500 text-sm font-medium mb-2">Full Name</label>
-                        <input type="text" defaultValue="Manick Sriram M" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900" />
+                        <input type="text" defaultValue="Priyanka" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900" />
                     </div>
                     <div>
                         <label className="block text-gray-500 text-sm font-medium mb-2">Email Address</label>
-                        <input type="email" defaultValue="manick@example.com" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900" />
+                        <input type="email" defaultValue="priyanka@example.com" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900" />
                     </div>
                     <div>
                         <label className="block text-gray-500 text-sm font-medium mb-2">Phone Number</label>
