@@ -15,10 +15,9 @@ const CustomerLayout: React.FC<CustomerLayoutProps> = ({ children, onLogout, tit
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 font-sans flex">
-      {/* Sidebar */}
       <div className="w-64 bg-white border-r border-gray-200 flex flex-col fixed inset-y-0 left-0 shadow-sm z-10">
         <div className="p-6 border-b border-gray-100">
-            <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight cursor-pointer" onClick={() => navigate('/dashboard')}>PMBank</h1>
+            <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight cursor-pointer" onClick={() => navigate('/dashboard')}>MSBank</h1>
             <p className="text-xs text-gray-400 mt-1">Personal Banking</p>
         </div>
         <nav className="p-4 space-y-2 flex-1">
@@ -64,7 +63,6 @@ const CustomerLayout: React.FC<CustomerLayoutProps> = ({ children, onLogout, tit
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="ml-64 flex-1 p-8">
         <header className="flex justify-between items-center mb-8">
             <div className="flex items-center gap-4">

@@ -37,17 +37,15 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="max-w-4xl w-full flex rounded-2xl shadow-2xl overflow-hidden bg-white">
-        {/* Left Side - Image/Branding */}
         <div className="hidden md:flex md:w-1/2 bg-[#0a192f] items-center justify-center p-12 relative overflow-hidden">
            <div className="absolute w-64 h-64 bg-[#112240] rounded-full -top-12 -left-12 opacity-50"></div>
            <div className="absolute w-32 h-32 bg-[#ffd700] rounded-full bottom-12 right-12 opacity-10"></div>
            <div className="relative z-10 text-center">
-              <h1 className="text-4xl font-bold text-white mb-4">PMBanking</h1>
+              <h1 className="text-4xl font-bold text-white mb-4">MS Banking</h1>
               <p className="text-[#8892b0]">Secure. Professional. Reliable.</p>
            </div>
         </div>
 
-        {/* Right Side - Form */}
         <div className="w-full md:w-1/2 p-12">
           <div className="text-center mb-10">
             <h2 className="text-3xl font-bold text-[#0a192f]">Welcome Back</h2>

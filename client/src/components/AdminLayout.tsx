@@ -15,10 +15,9 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, onLogout, title }) 
 
   return (
     <div className="min-h-screen bg-gray-900 text-white font-sans flex">
-      {/* Sidebar */}
       <div className="w-64 bg-gray-800 border-r border-gray-700 flex flex-col fixed inset-y-0 left-0">
         <div className="p-6 border-b border-gray-700">
-            <h1 className="text-2xl font-bold text-blue-400 cursor-pointer" onClick={() => navigate('/admin/dashboard')}>PMBank Admin</h1>
+            <h1 className="text-2xl font-bold text-blue-400 cursor-pointer" onClick={() => navigate('/admin/dashboard')}>MS Bank Admin</h1>
             <p className="text-xs text-gray-500 mt-1">Company Portal v2.0</p>
         </div>
         <nav className="p-4 space-y-2 flex-1">
@@ -64,7 +63,6 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, onLogout, title }) 
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="ml-64 flex-1 p-8">
         <header className="flex justify-between items-center mb-8">
             <div className="flex items-center gap-4">

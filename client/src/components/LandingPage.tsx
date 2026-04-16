@@ -8,7 +8,7 @@ const LandingPage: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 font-sans">
       <div className="max-w-4xl w-full px-6">
         <div className="text-center mb-16">
-          <h1 className="text-5xl font-extrabold text-gray-900 mb-4 tracking-tight">Welcome to PMBank</h1>
+          <h1 className="text-5xl font-extrabold text-gray-900 mb-4 tracking-tight">Welcome to MSBank</h1>
           <p className="text-xl text-gray-500">Secure, reliable, and designed for you.</p>
         </div>
 
@@ -49,7 +49,7 @@ const LandingPage: React.FC = () => {
         </div>
 
         <footer className="mt-16 text-center text-gray-400 text-sm">
-          &copy; 2024 PMBank Corporation. All rights reserved.
+          &copy; 2024 MS Bank Corporation. All rights reserved.
         </footer>
       </div>
     </div>

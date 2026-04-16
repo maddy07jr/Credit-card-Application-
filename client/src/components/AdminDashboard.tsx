@@ -71,7 +71,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
 
   return (
     <AdminLayout onLogout={onLogout} title="System Overview">
-        {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div 
                 onClick={() => navigate('/admin/users')}
@@ -105,7 +104,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
             </div>
         </div>
 
-        {/* Recent Transactions */}
         <div className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden">
             <div className="p-6 border-b border-gray-700 flex justify-between items-center">
                 <h3 className="text-xl font-bold">Recent System Transactions</h3>

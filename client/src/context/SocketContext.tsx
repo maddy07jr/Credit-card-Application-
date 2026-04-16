@@ -25,8 +25,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    // Connect to the server
-    // In production, you'd use an environment variable for the URL
+
     const newSocket = io(SOCKET_URL);
     setSocket(newSocket);
 
@@ -42,7 +41,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     setSocket(newSocket);
 
-    // Cleanup on unmount
+
     return () => {
       newSocket.close();
     };

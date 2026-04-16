@@ -57,7 +57,6 @@ const TransactionLogs: React.FC<TransactionLogsProps> = ({ onLogout }) => {
                             <td className="px-6 py-4"><span className="bg-green-500/10 text-green-400 px-2 py-1 rounded text-xs font-medium">Completed</span></td>
                             <td className="px-6 py-4 text-gray-400 text-sm">Oct 24, 2023</td>
                         </tr>
-                        {/* More mock rows... */}
                         <tr className="hover:bg-gray-700/30 transition-colors">
                             <td className="px-6 py-4 text-sm font-mono text-gray-400">#TRX-9819</td>
                             <td className="px-6 py-4 font-medium">David Chen</td>

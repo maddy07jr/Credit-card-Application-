@@ -116,7 +116,6 @@ const CardDashboard: React.FC<CardDashboardProps> = ({ onLogout }) => {
                 </div>
             </div>
 
-            {/* Perks Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-linear-to-br from-purple-500 to-indigo-600 p-6 rounded-2xl shadow-lg text-white transform hover:scale-105 transition-transform cursor-pointer">
                     <div className="bg-white/20 w-12 h-12 rounded-xl flex items-center justify-center mb-4 text-2xl">✈️</div>

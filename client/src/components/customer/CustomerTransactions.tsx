@@ -69,7 +69,6 @@ const CustomerTransactions: React.FC<CustomerTransactionsProps> = ({ onLogout })
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"
             />
-            {/* Filter button can be expanded later for advanced filters */}
             <button className="bg-gray-900 text-white px-6 py-3 rounded-xl font-medium hover:bg-black transition-colors">
                 Filter
             </button>

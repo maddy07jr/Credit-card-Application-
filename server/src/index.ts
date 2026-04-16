@@ -8,7 +8,6 @@ import { dataStore } from './dataStore';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Middleware
 app.use(cors({
     origin: process.env.CLIENT_URL || "*", // Allow configuring client URL
     methods: ["GET", "POST"]
@@ -23,7 +22,6 @@ const io = new Server(httpServer, {
     }
 });
 
-// Socket.io connection
 io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
 
@@ -34,8 +32,8 @@ io.on('connection', (socket) => {
 
 // Mock user for Level 1 Login
 const USER = {
-    username: 'maddy07jr',
-    password: 'Db25052002*'
+    username: 'admin',
+    password: 'admin123*'
 };
 
 app.post('/api/login', (req: Request, res: Response): void => {
